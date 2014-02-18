@@ -53,6 +53,14 @@ int main(int argc, char const* argv[])
     keep[index] = true;
   }
 
+  CharString outputFile;
+  if(getOptionValue(outputFile, parser, "O", 0) != true) {
+      std::cerr << "ERROR: failed to get output file\n";
+      return 1;
+  }
+
+  SequenceStream outStream(toCString(outputFile), SequenceStream::WRITE, SequenceStream::FASTQ);
+
   for(int i = 0; i < getArgumentValueCount(parser, 0); ++i) {
     CharString p;
     if(getArgumentValue(p, parser, 0, i) == false) {
@@ -63,14 +71,6 @@ int main(int argc, char const* argv[])
     std::cerr << "INFO: processing file " << p << "\n";
 
     SequenceStream inStream(toCString(p));
-
-    CharString outputFile;
-    if(getOptionValue(outputFile, parser, "O", 0) != true) {
-        std::cerr << "ERROR: failed to get output file\n";
-        return 1;
-    }
-
-    SequenceStream outStream(toCString(outputFile), SequenceStream::WRITE, SequenceStream::FASTQ);
     CharString id;
     Dna5String seq;
     CharString qual;
