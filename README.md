@@ -14,7 +14,7 @@ Here `NAGATC` is the index.
 ## index_stats
 
 ## split_single_reads
-
+```
 SYNOPSIS
     split_single_reads -i INDEX [-i INDEX2] INPUT1 [INPUT2] > OUTPUT.fastq
 
@@ -26,3 +26,4 @@ DESCRIPTION
           Displays this help message.
     -i, --index INDEX
           Index to select.
+```
