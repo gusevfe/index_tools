@@ -16,7 +16,7 @@ int main(int argc, char const* argv[])
   ArgumentParser parser("split_single_reads");
 
   addUsageLine(parser,
-             "-i INDEX [\\fI-i INDEX2\\fP] INPUT1 [\\fIINPUT2\\fP] > OUTPUT.fastq");
+             "-i INDEX [\\fI-i INDEX2\\fP] INPUT1 [\\fIINPUT2\\fP] -O OUTPUT.fastq.gz");
 
   addDescription(parser,
                "This program allows to select reads with "
@@ -28,6 +28,10 @@ int main(int argc, char const* argv[])
   addOption(parser, seqan::ArgParseOption(
             "i", "index", "Index to select.",
             seqan::ArgParseArgument::STRING, "INDEX", true));
+
+  addOption(parser, seqan::ArgParseOption(
+            "O", "output", "Output file.",
+            seqan::ArgParseArgument::STRING, "OUTPUT"));
 
   addArgument(parser, seqan::ArgParseArgument(
         seqan::ArgParseArgument::INPUTFILE, "INPUT", true));  
@@ -59,7 +63,14 @@ int main(int argc, char const* argv[])
     std::cerr << "INFO: processing file " << p << "\n";
 
     SequenceStream inStream(toCString(p));
-    SequenceStream outStream("-", SequenceStream::WRITE, SequenceStream::FASTQ);
+
+    CharString outputFile;
+    if(getOptionValue(outputFile, parser, "O", 0) != true) {
+        std::cerr << "ERROR: failed to get output file\n";
+        return 1;
+    }
+
+    SequenceStream outStream(toCString(outputFile), SequenceStream::WRITE, SequenceStream::FASTQ);
     CharString id;
     Dna5String seq;
     CharString qual;
